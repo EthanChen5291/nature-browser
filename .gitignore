@@ -2,6 +2,9 @@ music/
 videos/
 photos/
 
+# Large source videos — too big for GitHub, keep local only
+assets/*Hours*.mp4
+
 # Secrets — never commit
 .env
 .env.*
