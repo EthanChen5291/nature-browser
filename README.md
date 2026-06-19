@@ -12,7 +12,7 @@ nature video backdrop, and a rotating family photo gallery.
 | File | What it is |
 |------|------------|
 | `dad-dashboard.html` | The whole dashboard. Works on its own — just open it. |
-| `server.py` | Optional helper for YouTube→MP3, nature videos, and photos. |
+| `server.py` | Optional helper for nature videos, photos, and AI summaries. |
 | `README.md` | This file. |
 
 ---
@@ -32,17 +32,13 @@ following work immediately:
 
 ## The full experience (recommended)
 
-Running the small helper server unlocks **live microphone transcription**,
-**YouTube→MP3 song search**, and **real 4K nature videos**.
+Running the small helper server unlocks **live microphone transcription** and
+**real 4K nature videos**.
 
-### 1. Install the two tools it needs
+### 1. Install the one tool it needs (for nature videos)
 ```bash
 pip install yt-dlp
 ```
-You also need **ffmpeg** (for MP3 conversion):
-- macOS: `brew install ffmpeg`
-- Windows: `winget install Gyan.FFmpeg`
-- Linux: `sudo apt install ffmpeg`
 
 ### 2. (Optional) Grab a few starter nature videos
 ```bash
@@ -84,16 +80,11 @@ forward. No need to type the date — it knows.
 ## Adding music
 
 - **One-click calm:** the 🌿 button shuffles soothing instrumentals and presses play.
-- **Search YouTube:** type a song, press Search, then **⬇ Add** — it's added to
-  the playlist and starts playing.
-  - *Running locally* (`server.py`): the helper downloads it as an MP3.
-  - *On the deployed site:* full songs stream through a hidden YouTube player
-    (no download — Vercel can't run ffmpeg). This needs a **YouTube Data API
-    key**: in Google Cloud, enable **"YouTube Data API v3"**, create an API key,
-    and add it as `YOUTUBE_API_KEY` in the Vercel project's Environment
-    Variables. (Free quota is ~100 searches/day.)
-- **Add your own files:** press the **＋** next to search to pick audio files,
-  or drop `.mp3` files into the `music/` folder next to `server.py`.
+- **Add a song:** press **＋ Add a song** and pick one or more `.mp3` / `.wav`
+  (or other audio) files from your computer — they're added to the playlist and
+  start playing. Files added this way last for the current session.
+- **Permanent tracks:** drop `.mp3` files into the `music/` folder next to
+  `server.py` (when running locally).
 
 ## Adding family photos
 

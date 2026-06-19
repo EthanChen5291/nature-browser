@@ -129,8 +129,8 @@
   .grid {
     flex: 1; min-height: 0;
     display: grid;
-    grid-template-columns: 0.92fr 1.23fr;
-    grid-template-rows: 1fr 1fr;
+    grid-template-columns: 0.92fr 1.88fr;
+    grid-template-rows: 1.36fr 0.64fr;
     gap: 18px;
   }
   .panel {
@@ -193,6 +193,11 @@
   .btn:active { transform: scale(0.97); }
   .btn.ghost { background: transparent; border-color: var(--glass-border); color: var(--text-dim); }
   .btn.ghost:hover { background: rgba(255,255,255,0.07); color: var(--text); }
+  .btn.circle {
+    width: 30px; height: 30px; padding: 0; border-radius: 50%;
+    display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .head-actions { display: flex; align-items: center; gap: 8px; }
   ul.tasklist { list-style: none; display: flex; flex-direction: column; gap: 8px; }
   .task {
     display: flex; align-items: center; gap: 12px;
@@ -308,10 +313,15 @@
   .conv-menu-btn:hover { background: rgba(255,255,255,0.07); color: var(--text); }
   .conv-tabs { display: flex; align-items: center; gap: 4px; min-width: 0; overflow: hidden; }
   .conv-tab {
-    max-width: 104px; padding: 5px 10px; border-radius: 9px; font-size: 12.5px; cursor: pointer;
+    display: inline-flex; align-items: center; height: 32px;
+    max-width: 104px; padding: 0 10px; border-radius: 9px; font-size: 12.5px; cursor: pointer;
     background: rgba(255,255,255,0.08); border: 1px solid transparent; color: var(--text-dim);
     white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
     transition: background .15s ease, color .15s ease;
+  }
+  .conv-controls .btn {
+    display: inline-flex; align-items: center; height: 32px;
+    padding: 0 14px; font-size: 13px; border-radius: 10px;
   }
   .conv-tab:hover { background: rgba(255,255,255,0.14); color: var(--text); }
   .conv-tab.active {
@@ -443,12 +453,6 @@
   .seek input[type=range] { flex: 1; }
   .vol { display: flex; align-items: center; gap: 6px; font-size: 14px; flex-shrink: 0; }
   .vol input[type=range] { width: 70px; }
-  .music-tools { display: flex; gap: 8px; margin: 12px 0 10px; flex-shrink: 0; }
-  .music-tools input {
-    flex: 1; background: rgba(255,255,255,0.16); border: 1px solid var(--glass-border);
-    border-radius: 12px; padding: 9px 13px; color: var(--text); font-size: 13.5px; outline: none;
-  }
-  .music-tools input::placeholder { color: var(--text-faint); }
   .tracklist { list-style: none; flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 4px; }
   .track {
     display: flex; align-items: center; gap: 10px; padding: 8px 11px; border-radius: 10px;
@@ -459,10 +463,6 @@
   .track .t-ico { font-size: 13px; opacity: .7; width: 16px; text-align: center; flex-shrink: 0; }
   .track .t-title { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .track .t-dur { font-size: 12px; color: var(--text-faint); font-variant-numeric: tabular-nums; }
-  .search-results { margin-bottom: 8px; flex-shrink: 0; }
-  .sr-item { display: flex; align-items: center; gap: 10px; padding: 8px 11px; border-radius: 10px; background: rgba(0,0,0,0.16); margin-bottom: 5px; font-size: 13px; }
-  .sr-item .t-title { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .sr-item button { font-size: 12px; padding: 5px 11px; }
 
   /* ===== Photos ===== */
   .area-photos .panel-body { padding: 0; position: relative; }
@@ -485,15 +485,24 @@
 
   /* ===== Modal ===== */
   .modal-bg {
-    position: fixed; inset: 0; z-index: 50; background: rgba(15,22,17,0.55);
-    backdrop-filter: blur(6px); display: none; place-items: center;
+    position: fixed; inset: 0; z-index: 50; display: grid; place-items: center;
+    background: rgba(15,22,17,0); backdrop-filter: blur(0px); -webkit-backdrop-filter: blur(0px);
+    opacity: 0; visibility: hidden; pointer-events: none;
+    transition: background .42s ease, backdrop-filter .42s ease, -webkit-backdrop-filter .42s ease, opacity .42s ease, visibility 0s linear .42s;
   }
-  .modal-bg.show { display: grid; }
+  .modal-bg.show {
+    background: rgba(15,22,17,0.55); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+    opacity: 1; visibility: visible; pointer-events: auto;
+    transition: background .42s ease, backdrop-filter .42s ease, -webkit-backdrop-filter .42s ease, opacity .42s ease, visibility 0s;
+  }
   .modal {
     width: min(480px, 92vw); max-height: 86vh; overflow-y: auto;
     background: rgba(38,50,42,0.96); border: 1px solid var(--glass-border);
     border-radius: 20px; padding: 26px; box-shadow: var(--shadow);
+    transform: translateY(24px) scale(.97); opacity: 0;
+    transition: transform .44s cubic-bezier(.22,.61,.36,1), opacity .32s ease;
   }
+  .modal-bg.show .modal { transform: translateY(0) scale(1); opacity: 1; }
   .modal h2 { font-family: 'Fraunces', serif; font-weight: 500; font-size: 22px; margin-bottom: 6px; }
   .modal p.sub { color: var(--text-dim); font-size: 13.5px; margin-bottom: 18px; line-height: 1.5; }
   .field { margin-bottom: 16px; }
@@ -612,11 +621,6 @@
     .seek input[type=range]::-webkit-slider-thumb { width: 22px; height: 22px; }
     .track { font-size: 18px; padding: 14px 14px; }
     .track .t-dur { display: none; }
-    /* Trim the music tools to a single big search field */
-    .music-tools { margin: 14px 0 10px; }
-    .music-tools input { font-size: 16px; padding: 13px 15px; }
-    #searchBtn { padding: 13px 18px; font-size: 16px; }
-    #uploadBtn { display: none; }                 /* no file picking on a phone */
     #calmMode { font-size: 15px !important; padding: 11px 16px !important; }
 
     /* ---- Meeting notes: keep the two actions that matter, drop the rest ---- */
@@ -793,7 +797,11 @@
       <section class="panel area-music">
         <div class="panel-head">
           <div class="panel-title"><span class="dot"></span> Leo Rojas</div>
-          <button type="button" class="btn" id="calmMode" style="font-size:12.5px;padding:7px 13px"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 3h5v5"/><path d="M4 20 21 3"/><path d="M21 16v5h-5"/><path d="M15 15l6 6"/><path d="M4 4l5 5"/></svg> Shuffle</button>
+          <div class="head-actions">
+            <button type="button" class="btn ghost circle" id="uploadBtn" aria-label="Add a song from this computer" title="Add an .mp3 or .wav file from this computer"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+            <input type="file" id="fileInput" accept="audio/*,.mp3,.wav,.m4a,.ogg" multiple hidden />
+            <button type="button" class="btn" id="calmMode" style="font-size:12.5px;padding:7px 13px"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 3h5v5"/><path d="M4 20 21 3"/><path d="M21 16v5h-5"/><path d="M15 15l6 6"/><path d="M4 4l5 5"/></svg> Shuffle</button>
+          </div>
         </div>
         <div class="panel-body">
           <div class="now-playing">
@@ -814,13 +822,6 @@
             <input type="range" id="seek" min="0" max="100" value="0" aria-label="Seek position" />
             <span id="durTime">0:00</span>
           </div>
-          <div class="music-tools">
-            <input id="songSearch" placeholder="Search more…" aria-label="Search for a song" maxlength="120" />
-            <button type="button" class="btn" id="searchBtn">Search</button>
-            <button type="button" class="btn ghost" id="uploadBtn" aria-label="Add a music file from this computer" title="Add a file from this computer">＋</button>
-            <input type="file" id="fileInput" accept="audio/*" multiple hidden />
-          </div>
-          <div class="search-results" id="searchResults"></div>
           <ul class="tracklist" id="tracklist"></ul>
         </div>
       </section>
@@ -830,8 +831,6 @@
 
   <!-- Audio element -->
   <audio id="audio"></audio>
-  <!-- Hidden YouTube player: streams full songs added from search (no MP3 needed) -->
-  <div id="ytplayer" style="position:absolute;width:0;height:0;overflow:hidden;left:-9999px"></div>
 
   <!-- Settings modal -->
   <div class="modal-bg" id="settingsModal">
@@ -1102,102 +1101,31 @@ function renderTracks() {
     ul.appendChild(li);
   });
 }
-// Two playback engines share one set of controls: the <audio> element for
-// files/URLs, and a hidden YouTube IFrame for tracks added from search (they
-// carry a ytId instead of a playable src). `ytActive` says which one owns the
-// transport right now so play/pause/seek/progress route to the correct one.
-let ytPlayer = null, ytReady = false, ytActive = false, ytPending = null, ytPoll = null;
-
-// Load the IFrame API lazily — only the first time a YouTube track is played.
-function loadYTApi() {
-  if (window.YT && window.YT.Player) { return; }
-  if (document.getElementById('yt-api')) return;
-  const s = document.createElement('script');
-  s.id = 'yt-api'; s.src = 'https://www.youtube.com/iframe_api';
-  document.head.appendChild(s);
-}
-window.onYouTubeIframeAPIReady = () => {
-  ytPlayer = new YT.Player('ytplayer', {
-    height: '0', width: '0',
-    playerVars: { autoplay: 0, controls: 0, disablekb: 1, playsinline: 1 },
-    events: {
-      onReady: () => {
-        ytReady = true;
-        try { ytPlayer.setVolume(+$('vol').value); } catch(_) {}
-        if (ytPending) { ytPlayer.loadVideoById(ytPending); ytPending = null; }
-      },
-      onStateChange: (e) => {
-        if (e.data === YT.PlayerState.ENDED) nextTrack();
-        else if (e.data === YT.PlayerState.PLAYING) { setPlayingUI(true); startYTPoll(); }
-        else if (e.data === YT.PlayerState.PAUSED) { setPlayingUI(false); stopYTPoll(); }
-      },
-    },
-  });
-};
-function startYTPoll() {
-  stopYTPoll();   // YT has no timeupdate event, so poll the clock while playing
-  ytPoll = setInterval(() => {
-    if (ytPlayer && ytPlayer.getDuration) setProgress(ytPlayer.getCurrentTime(), ytPlayer.getDuration());
-  }, 500);
-}
-function stopYTPoll() { if (ytPoll) { clearInterval(ytPoll); ytPoll = null; } }
-
-// Shared UI updaters, driven by whichever engine is active.
-function setPlayingUI(playing) {
-  $('playBtn').innerHTML = playing ? ICONS.pause : ICONS.play;
-  $('vinyl').classList.toggle('spin', playing);
-  $('toggleMusic').classList.toggle('active', playing);
-}
-function setProgress(cur, dur) {
-  if (dur) { $('seek').value = (cur/dur*100)||0; $('curTime').textContent = fmtTime(cur); $('durTime').textContent = fmtTime(dur); }
-}
-
 function playTrack(i) {
   if (i < 0 || i >= playlist.length) return;
   current = i; const tr = playlist[i];
-  if (tr.ytId) {
-    ytActive = true;
-    try { audio.pause(); } catch(_) {}
-    audio.removeAttribute('src');   // release the <audio> engine
-    loadYTApi();
-    if (ytReady && ytPlayer) ytPlayer.loadVideoById(tr.ytId);
-    else ytPending = tr.ytId;       // onReady picks this up once the API loads
-  } else {
-    if (ytActive && ytReady && ytPlayer) { try { ytPlayer.stopVideo(); } catch(_) {} }
-    ytActive = false; stopYTPoll();
-    audio.src = tr.src; audio.play().catch(()=>toast('Could not play this track (needs internet or a valid file).'));
-  }
+  audio.src = tr.src; audio.play().catch(()=>toast('Could not play this track (needs internet or a valid file).'));
   $('npTitle').textContent = tr.title; $('npArtist').textContent = tr.artist || '';
   renderTracks();
 }
 function togglePlay() {
   if (current === -1 && playlist.length) { playTrack(0); return; }
-  if (ytActive) {
-    if (!ytReady) return;
-    if (ytPlayer.getPlayerState() === YT.PlayerState.PLAYING) ytPlayer.pauseVideo();
-    else ytPlayer.playVideo();
-  } else {
-    if (audio.paused) audio.play(); else audio.pause();
-  }
+  if (audio.paused) audio.play(); else audio.pause();
 }
-audio.onplay = () => { if (!ytActive) setPlayingUI(true); };
-audio.onpause = () => { if (!ytActive) setPlayingUI(false); };
-audio.onended = () => { if (!ytActive) nextTrack(); };
-audio.ontimeupdate = () => { if (!ytActive) setProgress(audio.currentTime, audio.duration); };
+audio.onplay = () => { $('playBtn').innerHTML = ICONS.pause; $('vinyl').classList.add('spin'); $('toggleMusic').classList.add('active'); };
+audio.onpause = () => { $('playBtn').innerHTML = ICONS.play; $('vinyl').classList.remove('spin'); $('toggleMusic').classList.remove('active'); };
+audio.onended = () => nextTrack();
+audio.ontimeupdate = () => {
+  if (audio.duration) { $('seek').value = (audio.currentTime/audio.duration*100)||0; $('curTime').textContent = fmtTime(audio.currentTime); $('durTime').textContent = fmtTime(audio.duration); }
+};
 function nextTrack() { if (playlist.length) playTrack((current+1) % playlist.length); }
 function prevTrack() { if (playlist.length) playTrack((current-1+playlist.length) % playlist.length); }
 $('playBtn').onclick = togglePlay;
 $('nextBtn').onclick = nextTrack;
 $('prevBtn').onclick = prevTrack;
 $('toggleMusic').onclick = togglePlay;
-$('seek').oninput = () => {
-  if (ytActive) { if (ytReady) { const d = ytPlayer.getDuration(); if (d) ytPlayer.seekTo($('seek').value/100*d, true); } }
-  else if (audio.duration) audio.currentTime = $('seek').value/100*audio.duration;
-};
-$('vol').oninput = () => {
-  audio.volume = $('vol').value/100;
-  if (ytReady) { try { ytPlayer.setVolume(+$('vol').value); } catch(_) {} }
-};
+$('seek').oninput = () => { if (audio.duration) audio.currentTime = $('seek').value/100*audio.duration; };
+$('vol').oninput = () => { audio.volume = $('vol').value/100; };
 audio.volume = 0.7;
 
 // Shuffle the playlist and start playing track 0. Browsers block sound until a
@@ -1207,17 +1135,17 @@ function shuffleAndAutoplay() {
   if (!playlist.length) return;
   playlist = playlist.slice().sort(() => Math.random() - 0.5);
   LS.set('playlist', playlist.filter(t => !t.local));
-  playTrack(0);
-  // Browsers block sound until a user gesture; if the first <audio> play() was
-  // rejected, resume on the first click/key/tap. (YT tracks handle this themselves.)
-  if (!ytActive) {
-    const p = audio.play();
-    if (p && p.catch) p.catch(() => {
-      const resume = () => { audio.play().catch(() => {}); };
-      ['click', 'keydown', 'touchstart'].forEach(ev =>
-        document.addEventListener(ev, resume, { once: true }));
-    });
-  }
+  current = 0;
+  const tr = playlist[0];
+  audio.src = tr.src;
+  $('npTitle').textContent = tr.title; $('npArtist').textContent = tr.artist || '';
+  renderTracks();
+  const p = audio.play();
+  if (p && p.catch) p.catch(() => {
+    const resume = () => { audio.play().catch(() => {}); };
+    ['click', 'keydown', 'touchstart'].forEach(ev =>
+      document.addEventListener(ev, resume, { once: true }));
+  });
 }
 $('calmMode').onclick = () => {
   // Reshuffle the whole collection (Leo Rojas first) and start from the top.
@@ -1225,13 +1153,20 @@ $('calmMode').onclick = () => {
   toast('Shuffling Leo Rojas — enjoy.');
 };
 
-// Add local files
+// Add songs by picking .mp3/.wav (or any audio) files from this computer.
+// They play from an in-memory blob URL, so they last for this session.
 $('uploadBtn').onclick = () => $('fileInput').click();
 $('fileInput').onchange = (e) => {
-  [...e.target.files].forEach(f => {
+  const files = [...e.target.files];
+  if (!files.length) return;
+  const startAt = playlist.length;
+  files.forEach(f => {
     playlist.push({ title: f.name.replace(/\.[^.]+$/,''), artist: 'From this computer', src: URL.createObjectURL(f), local: true });
   });
-  renderTracks(); toast('Added ' + e.target.files.length + ' track(s) for this session.');
+  renderTracks();
+  playTrack(startAt);                 // start playing the first one just added
+  e.target.value = '';               // let the same file be picked again later
+  toast('Added ' + files.length + ' track(s) for this session.');
 };
 
 // Find the nearest scrollable ancestor (the body is overflow:hidden, so the
@@ -1279,48 +1214,6 @@ function smoothScrollIntoView(el, margin = 16) {
   _scrollRAF = requestAnimationFrame(step);
 }
 
-// YouTube search via helper server
-async function searchSongs() {
-  let q = $('songSearch').value.trim(); if (!q) return;
-  if (q.length > LIMITS.maxQuery) q = q.slice(0, LIMITS.maxQuery);   // bound query length
-  const wait = limitSearch(); if (wait) { toast(wait); return; }     // cooldown between searches
-  const box = $('searchResults');
-  box.innerHTML = '<div class="empty"><span class="spinner"></span> Searching…</div>';
-  smoothScrollIntoView(box);
-  try {
-    const r = await safeFetch(safeHttpUrl(settings.server, '') + '/api/search?type=music&q=' + encodeURIComponent(q));
-    if (!r.ok) throw new Error('bad');
-    const data = await r.json();
-    box.innerHTML = '';
-    if (!data.results || !data.results.length) { box.innerHTML = '<div class="empty">No results.</div>'; smoothScrollIntoView(box); return; }
-    data.results.forEach(item => {
-      const d = document.createElement('div'); d.className = 'sr-item';
-      // esc() the server-supplied duration — never trust response data in innerHTML.
-      d.innerHTML = '<span class="t-ico">'+ICONS.play+'</span><span class="t-title"></span><span class="t-dur">'+esc(item.duration||'')+'</span><button class="btn">'+ICONS.download+' Add</button>';
-      d.querySelector('.t-title').textContent = item.title;
-      d.querySelector('button').onclick = (ev) => addYouTube(item, ev.target);
-      box.appendChild(d);
-    });
-    smoothScrollIntoView(box);
-  } catch (err) {
-    box.innerHTML = '<div class="empty">Song search isn’t available. On the deployed site it needs a YouTube API key (set <code>YOUTUBE_API_KEY</code> in the Vercel project); locally, start <code>python3 server.py</code> and set its URL in '+ICONS.gear+' Settings.</div>';
-    smoothScrollIntoView(box);
-  }
-}
-// Add a YouTube result to the playlist and start playing it. Full songs stream
-// through the hidden IFrame player — no MP3 download, so this works on the
-// deployed site (Vercel can't run ffmpeg/yt-dlp).
-function addYouTube(item, btn) {
-  if (playlist.some(t => t.ytId === item.id)) {
-    btn.innerHTML = ICONS.check + ' Added'; toast('Already in playlist.'); return;
-  }
-  playlist.push({ title: item.title, artist: 'YouTube', ytId: item.id, fromYT: true });
-  LS.set('playlist', playlist.filter(t=>!t.local)); renderTracks();
-  playTrack(playlist.length - 1);
-  btn.innerHTML = ICONS.check + ' Added'; toast('Added & playing: ' + item.title);
-}
-$('searchBtn').onclick = searchSongs;
-$('songSearch').addEventListener('keydown', e => { if (e.key === 'Enter') searchSongs(); });
 renderTracks();
 
 // Load any previously downloaded tracks from the helper library
@@ -1556,7 +1449,8 @@ function visibleConvs() {
 }
 function renderTabs() {
   const wrap = $('convTabs');
-  wrap.innerHTML = visibleConvs().map(c =>
+  // skip blank chats — the "New" button already represents an unstarted chat
+  wrap.innerHTML = visibleConvs().filter(c => c.history.length).map(c =>
     '<div class="conv-tab' + (c.id === activeId ? ' active' : '') + '" data-id="' + c.id + '" title="' +
     esc(c.title) + '">' + esc(c.title) + '</div>'
   ).join('');
@@ -2197,7 +2091,7 @@ shuffleAndAutoplay();
   // Three fixed cells:  a = top-left, b = bottom-left, c = right (spans both rows).
   // Panels are assigned to cells; a "swap" just exchanges two assignments,
   // so a panel can take on another's size (e.g. grow to span the full height).
-  const DEFAULT = { colFr: [0.92, 1.23], rowFr: [1, 1], cells: { a:'photos', b:'music', c:'notes' } };
+  const DEFAULT = { colFr: [0.92, 1.88], rowFr: [1.36, 0.64], cells: { a:'photos', b:'music', c:'notes' } };
   let state = LS.get('layout', null);
   if (!state || !state.cells || !PIDS.every(p => Object.values(state.cells).includes(p))) {
     state = JSON.parse(JSON.stringify(DEFAULT));
