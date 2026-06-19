@@ -1,0 +1,21 @@
+# Exclude the two giant root videos (2.3 GB + 37 GB) but keep the small
+# nature clips. Subfolders (assets/memories, assets/music) are untouched.
+assets/*.mp4
+!assets/nature1.mp4
+!assets/nature2.mp4
+!assets/nature3.mp4
+!assets/nature4.mp4
+!assets/nature5.mp4
+!assets/nature6.mp4
+!assets/nature7.mp4
+
+# Local helper server (replaced on Vercel by api/summarize.py + api/library.py)
+server.py
+
+# Secrets and cruft
+.env
+.env.*
+__pycache__/
+**/__pycache__/
+.DS_Store
+**/.DS_Store

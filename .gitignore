@@ -1,0 +1,8 @@
+music/
+videos/
+photos/
+
+# Secrets — never commit
+.env
+.env.*
+.vercel
