@@ -1,6 +1,7 @@
-music/
-videos/
-photos/
+# Top-level scratch folders only — do NOT match assets/music, assets/videos, etc.
+/music/
+/videos/
+/photos/
 
 # Large source videos — too big for GitHub, keep local only
 assets/*Hours*.mp4
